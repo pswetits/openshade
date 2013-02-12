@@ -1,3 +1,3 @@
 OpenShade
-a java sequence alignment shading and editing utility
 =========
+a java sequence alignment shading and editing utility
