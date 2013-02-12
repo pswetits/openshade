@@ -1,0 +1,28 @@
+/*package ui;
+
+import java.util.Scanner;
+
+import app.Manager;
+
+public class OpenShade {
+	public static void main(String[] args){
+		Manager man = new Manager();
+		Scanner scan = new Scanner(System.in);
+		System.out.println("Press \'n\' to open a new file \n" +
+				"Press \'s\' to shade similarities\n" +
+				"Press \'q\' at any time to quit");	
+		String command = scan.next();
+		while(!command.equalsIgnoreCase("q")){
+			if(command.equalsIgnoreCase("n")){
+				System.out.println("Please provide the path of your input file: ");
+				//String fileName = scan.next();
+				man.readIn("/Users/peterswetits/ALNTestData.txt");
+			}
+			if(scan.next().equalsIgnoreCase("s")){
+				/** call shading method 
+				man.shade();
+			}
+			command = scan.next();
+		}
+	}
+} */

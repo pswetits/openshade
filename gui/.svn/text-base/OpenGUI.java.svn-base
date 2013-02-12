@@ -1,0 +1,197 @@
+package gui;
+
+import java.awt.EventQueue;
+
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import java.awt.BorderLayout;
+
+import javax.swing.JFileChooser;
+import javax.swing.JScrollPane;
+import javax.swing.GroupLayout;
+import javax.swing.GroupLayout.Alignment;
+import javax.swing.JTabbedPane;
+import javax.swing.JTable;
+import javax.swing.LayoutStyle.ComponentPlacement;
+import java.awt.FlowLayout;
+import javax.swing.JButton;
+
+import app.Manager;
+
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import java.io.File;
+
+import javax.swing.JMenuBar;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
+
+public class OpenGUI {
+
+	private JFrame frame;
+	
+	/** 
+	 * instantiate display components 
+	 */
+	private JPanel displayPanel;
+	private static JScrollPane scrollPane;
+	private static JTabbedPane tabbedPane;
+	
+	
+	/** 
+	 * instantiate manager 
+	 */
+	private Manager man = new Manager();
+	
+	/**
+	 * boolean true if table is currently being displayed, error check for shading nothing
+	 */
+	static boolean tableIn = false;
+	
+
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					OpenGUI window = new OpenGUI();
+					window.frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	/**
+	 * Create the application.
+	 */
+	public OpenGUI() {
+		initialize();
+	}
+
+	/**
+	 * Initialize the contents of the frame.
+	 */
+	private void initialize() {
+		frame = new JFrame();
+		frame.setBounds(100, 100, 800, 600);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		
+		displayPanel = new JPanel();
+		
+		JPanel buttonPanel = new JPanel();
+		GroupLayout groupLayout = new GroupLayout(frame.getContentPane());
+		groupLayout.setHorizontalGroup(
+			groupLayout.createParallelGroup(Alignment.LEADING)
+				.addGroup(groupLayout.createSequentialGroup()
+					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+						.addComponent(displayPanel, GroupLayout.PREFERRED_SIZE, 800, GroupLayout.PREFERRED_SIZE)
+						.addGroup(groupLayout.createSequentialGroup()
+							.addContainerGap()
+							.addComponent(buttonPanel, GroupLayout.DEFAULT_SIZE, 788, Short.MAX_VALUE)))
+					.addContainerGap())
+		);
+		groupLayout.setVerticalGroup(
+			groupLayout.createParallelGroup(Alignment.LEADING)
+				.addGroup(groupLayout.createSequentialGroup()
+					.addComponent(displayPanel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+					.addGap(18)
+					.addComponent(buttonPanel, GroupLayout.PREFERRED_SIZE, 61, GroupLayout.PREFERRED_SIZE)
+					.addContainerGap(67, Short.MAX_VALUE))
+		);
+		buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+		
+		/**
+		 * instantiate shadeButton and add action event to shade sequences
+		 */
+		JButton shadeButton = new JButton("Shade");
+		shadeButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				if(tableIn)
+					man.shade();
+			}
+		});
+		buttonPanel.add(shadeButton);
+		
+		/**
+		 * grouplayout code for tabbedPane
+		 */
+		tabbedPane = new JTabbedPane(JTabbedPane.TOP);
+		GroupLayout gl_displayPanel = new GroupLayout(displayPanel);
+		gl_displayPanel.setHorizontalGroup(
+			gl_displayPanel.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_displayPanel.createSequentialGroup()
+					.addContainerGap()
+					.addComponent(tabbedPane, GroupLayout.DEFAULT_SIZE, 788, Short.MAX_VALUE)
+					.addContainerGap())
+		);
+		gl_displayPanel.setVerticalGroup(
+			gl_displayPanel.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_displayPanel.createSequentialGroup()
+					.addContainerGap()
+					.addComponent(tabbedPane, GroupLayout.PREFERRED_SIZE, 398, GroupLayout.PREFERRED_SIZE)
+					.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+		);
+		
+		
+		displayPanel.setLayout(gl_displayPanel);
+		frame.getContentPane().setLayout(groupLayout);
+		
+		
+		/**
+		 * Set up JMenu items
+		 */
+		JMenuBar menuBar = new JMenuBar();
+		frame.setJMenuBar(menuBar);
+		
+		JMenu fileMenu = new JMenu("File");
+		menuBar.add(fileMenu);
+		
+		/**
+		 * set up open button with action event to open file chooser
+		 */
+		JMenuItem openMenu = new JMenuItem("Open");
+		openMenu.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                openActionPerformed(evt);
+            }
+        });
+		fileMenu.add(openMenu);
+	}
+	
+	/**
+	 * sets up FileChooser and calls readIn() method of man
+	 * @param evt
+	 */
+	private void openActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openActionPerformed
+        // Instantiates JFileChooser to open file when open menu is clicked
+        JFileChooser chooser = new JFileChooser();
+        int status = chooser.showOpenDialog(null);
+		
+        //tries to open file
+        if (status == JFileChooser.APPROVE_OPTION) {
+            File input = chooser.getSelectedFile();
+            man.readIn(input);
+        }
+	}
+	
+	private static void addTab(JTable table, String tabName){
+		scrollPane = new JScrollPane(table);
+		tabbedPane.addTab(tabName, null, scrollPane, null);
+		tabbedPane.validate();
+		
+	}
+	
+	public static void addTable(JTable table, String tabName){
+		addTab(table, tabName);
+		tableIn = true;
+		
+	}
+	
+	public static void refresh(){
+		tabbedPane.repaint();
+	}
+}
